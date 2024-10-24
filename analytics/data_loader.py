@@ -28,13 +28,18 @@ def load_stations_info(db):
 
 def load_status_data(db, start_date, end_date):
     try:
+        # Convert start_date and end_date to strings in ISO format
+        start_date_str = start_date.isoformat()
+        end_date_str = end_date.isoformat()
+        
+        logger.info(f"Querying data between {start_date_str} and {end_date_str}")
+
+        # Compare last_reported as strings
         pipeline = [
             {"$match": {
-                "$expr": {
-                    "$and": [
-                        {"$gte": [{"$toDate": "$last_reported"}, start_date]},
-                        {"$lt": [{"$toDate": "$last_reported"}, end_date]}
-                    ]
+                "last_reported": {
+                    "$gte": start_date_str,
+                    "$lt": end_date_str
                 }
             }},
             {"$project": {
@@ -47,7 +52,7 @@ def load_status_data(db, start_date, end_date):
         status_data = list(db.status_09.aggregate(pipeline))
         logger.info(f"Loaded {len(status_data)} status records")
         if len(status_data) == 0:
-            logger.info(f"No data found between {start_date} and {end_date}")
+            logger.info(f"No data found between {start_date_str} and {end_date_str}")
             min_date = db.status_09.find_one({}, sort=[("last_reported", 1)])
             max_date = db.status_09.find_one({}, sort=[("last_reported", -1)])
             if min_date and max_date:
@@ -95,9 +100,9 @@ def load_sample_data():
     skipped_stations = [16, 38, 44, 55, 59, 93, 169, 172, 181, 407, 453] + list(range(520, 526)) + list(range(527, 537))
     stations_info = stations_info[~stations_info['station_id'].isin(skipped_stations)]
 
-    # Load data for a shorter time period (e.g., one day) and sample randomly
-    start_date = datetime(2024, 9, 1)
-    end_date = datetime(2024, 9, 2)
+    # Correctly initialize start_date and end_date as datetime objects
+    start_date = datetime(2024, 8, 31, 23, 55)
+    end_date = datetime(2024, 10, 1, 0, 15)
     
     logger.info(f"Attempting to load status data for one day in September 2024")
     
