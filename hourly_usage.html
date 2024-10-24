@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .error {
+        color: red;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.17.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "layer": [{"mark": "line", "encoding": {"color": {"value": "blue"}, "x": {"field": "hour", "type": "ordinal"}, "y": {"field": "num_bikes_available", "title": "Average Number Available", "type": "quantitative"}}, "title": "Average Hourly Bike Availability"}, {"mark": "line", "encoding": {"color": {"value": "red"}, "x": {"field": "hour", "type": "ordinal"}, "y": {"field": "num_docks_available", "title": "Average Number Available", "type": "quantitative"}}}], "data": {"name": "data-e8752552761124cfcac025585b8799c6"}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-e8752552761124cfcac025585b8799c6": [{"hour": 0, "num_bikes_available": 10.156196943972835, "num_docks_available": 15.264855687606111}, {"hour": 1, "num_bikes_available": 10.106666666666667, "num_docks_available": 15.216666666666667}, {"hour": 2, "num_bikes_available": 11.041322314049587, "num_docks_available": 14.702479338842975}, {"hour": 3, "num_bikes_available": 11.207191780821917, "num_docks_available": 14.532534246575343}, {"hour": 4, "num_bikes_available": 10.962962962962964, "num_docks_available": 14.643518518518519}, {"hour": 5, "num_bikes_available": 10.929121725731894, "num_docks_available": 14.64869029275809}, {"hour": 6, "num_bikes_available": 11.156765676567657, "num_docks_available": 14.089108910891088}, {"hour": 7, "num_bikes_available": 11.406574394463668, "num_docks_available": 13.820069204152249}, {"hour": 8, "num_bikes_available": 10.569805194805195, "num_docks_available": 14.784090909090908}, {"hour": 9, "num_bikes_available": 11.058823529411764, "num_docks_available": 14.630514705882353}, {"hour": 10, "num_bikes_available": 10.234248788368337, "num_docks_available": 14.985460420032311}, {"hour": 11, "num_bikes_available": 10.474295190713102, "num_docks_available": 15.155887230514097}, {"hour": 12, "num_bikes_available": 10.488562091503267, "num_docks_available": 14.735294117647058}, {"hour": 13, "num_bikes_available": 10.577702702702704, "num_docks_available": 15.20945945945946}, {"hour": 14, "num_bikes_available": 10.116693679092382, "num_docks_available": 15.235008103727715}, {"hour": 15, "num_bikes_available": 10.828483920367534, "num_docks_available": 14.966309341500766}, {"hour": 16, "num_bikes_available": 10.088141025641026, "num_docks_available": 15.426282051282051}, {"hour": 17, "num_bikes_available": 9.504105090311986, "num_docks_available": 16.576354679802957}, {"hour": 18, "num_bikes_available": 9.069918699186992, "num_docks_available": 16.240650406504066}, {"hour": 19, "num_bikes_available": 9.148760330578513, "num_docks_available": 16.54710743801653}, {"hour": 20, "num_bikes_available": 8.786061588330632, "num_docks_available": 16.251215559157213}, {"hour": 21, "num_bikes_available": 9.790199081163859, "num_docks_available": 15.918836140888208}, {"hour": 22, "num_bikes_available": 10.654485049833887, "num_docks_available": 15.634551495016611}, {"hour": 23, "num_bikes_available": 10.483920367534456, "num_docks_available": 15.013782542113324}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div class="error" style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

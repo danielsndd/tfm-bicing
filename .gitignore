@@ -20,3 +20,5 @@ logs/
 
 *.ipynb
 
+postman-api/node_modules/
+

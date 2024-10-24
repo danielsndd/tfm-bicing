@@ -1,5 +1,5 @@
 from data_loader import load_sample_data, preprocess_data
-from visualizations import plot_station_availability, plot_hourly_usage, create_station_map, plot_weekly_heatmap
+from visualizations import plot_station_availability, plot_hourly_usage, create_station_map, plot_weekly_heatmap, plot_performance_comparison, plot_bicing_service_comparison
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
@@ -10,9 +10,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def prepare_features(merged_data):
-    features = merged_data[['hour', 'day_of_week', 'is_weekend', 'station_id']]
-    features = pd.get_dummies(features, columns=['station_id'])
-    return features
+    features = merged_data[['hour', 'day_of_week', 'lat', 'lon', 'altitude']]
+    return pd.get_dummies(features, columns=['hour', 'day_of_week'])
 
 def train_prediction_model(merged_data):
     X = prepare_features(merged_data)
@@ -22,8 +21,8 @@ def train_prediction_model(merged_data):
     X_train, X_test, y_bikes_train, y_bikes_test, y_docks_train, y_docks_test = train_test_split(
         X, y_bikes, y_docks, test_size=0.2, random_state=42)
     
-    rf_bikes = RandomForestRegressor(n_estimators=100, random_state=42)
-    rf_docks = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf_bikes = RandomForestRegressor(n_estimators=50, max_depth=10, random_state=42)
+    rf_docks = RandomForestRegressor(n_estimators=50, max_depth=10, random_state=42)
     
     rf_bikes.fit(X_train, y_bikes_train)
     rf_docks.fit(X_train, y_docks_train)
@@ -73,6 +72,14 @@ def main():
     
     logger.info(f"Predicted bikes available: {predicted_bikes[0]:.2f}")
     logger.info(f"Predicted docks available: {predicted_docks[0]:.2f}")
+    
+    # Performance comparison chart
+    performance_chart = plot_performance_comparison(merged_data, rf_bikes)
+    performance_chart.show()
 
 if __name__ == "__main__":
     main()
+
+    # Bicing service comparison chart
+    bicing_comparison_chart = plot_bicing_service_comparison(merged_data, rf_bikes)
+    bicing_comparison_chart.show()

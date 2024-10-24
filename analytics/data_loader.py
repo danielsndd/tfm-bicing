@@ -95,19 +95,20 @@ def load_sample_data():
     skipped_stations = [16, 38, 44, 55, 59, 93, 169, 172, 181, 407, 453] + list(range(520, 526)) + list(range(527, 537))
     stations_info = stations_info[~stations_info['station_id'].isin(skipped_stations)]
 
-    # Try to load data for the entire month of September 2024
+    # Load data for a shorter time period (e.g., one day) and sample randomly
     start_date = datetime(2024, 9, 1)
-    end_date = datetime(2024, 10, 1)
+    end_date = datetime(2024, 9, 2)
     
-    logger.info(f"Attempting to load status data for September 2024")
+    logger.info(f"Attempting to load status data for one day in September 2024")
     
     status_data = load_status_data(db, start_date, end_date)
     
     if not status_data.empty:
-        logger.info(f"Successfully loaded data for September 2024")
+        # Randomly sample 10% of the data
+        status_data = status_data.sample(frac=0.1, random_state=42)
+        logger.info(f"Successfully loaded and sampled data for one day in September 2024")
         return stations_info, status_data
-    
-    logger.error("No status data found for September 2024")
+
     return None, None
 
 if __name__ == "__main__":
